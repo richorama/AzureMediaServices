@@ -40,6 +40,7 @@ namespace MediaServicesClient
             connector.HandleAssetUploaded += new AssetUploaded(connector_HandleAssetUploaded);
             connector.HandleAssetDeleted += new AssetDeleted(connector_HandleAssetDeleted);
             connector.HandleJobsReceived += new JobsReceived(connector_HandleJobsReceived);
+            connector.OnUploadReceived += new UploadReceived(connector_OnUploadReceived);
 
             AssetsListBox.ItemsSource = connector.assetsList;
             foreach (String option in connector.encodingOptions)
@@ -47,6 +48,17 @@ namespace MediaServicesClient
                 encodingOptions.Add(option);
             }
             EncodingOptions.ItemsSource = encodingOptions;
+        }
+
+        void connector_OnUploadReceived(UploadProgressEventArgs e)
+        {
+            //Console.WriteLine("Upload Progress Received");
+            //Console.WriteLine(e.Progress);
+            this.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    UploadProgressBar.Value = e.Progress;
+                }
+            ));
         }
 
         void connector_HandleJobsReceived(ObservableCollection<IJob> jobs)
@@ -73,7 +85,12 @@ namespace MediaServicesClient
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
                 {
+                    UploadProgressPanel.Visibility = System.Windows.Visibility.Collapsed;
                     EncodeButton.Visibility = System.Windows.Visibility.Visible;
+
+                    EncodingPanel.Visibility = System.Windows.Visibility.Visible;
+                    MediaServicesPanel.Visibility = System.Windows.Visibility.Collapsed;
+                    UploadPanel.Visibility = System.Windows.Visibility.Visible;
                     connector.UpdateAssetList();
                 }
             ));
@@ -134,11 +151,7 @@ namespace MediaServicesClient
         {
             String fileNames = fileDialog.FileName;
             connector.UploadAsset(fileNames, AssetCreationOptions.StorageEncrypted);
-
-            EncodingPanel.Visibility = System.Windows.Visibility.Visible;
-
-            MediaServicesPanel.Visibility = System.Windows.Visibility.Collapsed;
-            UploadPanel.Visibility = System.Windows.Visibility.Visible;
+            UploadProgressPanel.Visibility = System.Windows.Visibility.Visible;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

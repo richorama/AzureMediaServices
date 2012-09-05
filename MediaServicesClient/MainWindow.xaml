@@ -53,7 +53,10 @@
         
         <StackPanel x:Name="UploadPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="1" Grid.Row="1">
             <Label x:Name="CurrentFileLabel" Content="" />
-            <Button x:Name="EncodeButton" Content="Encode" Click="UploadAsset_Clicked" Visibility="Collapsed" />            
+            <Button x:Name="EncodeButton" Content="Encode" Click="UploadAsset_Clicked" Visibility="Collapsed" />  
+        </StackPanel>
+        <StackPanel x:Name="UploadProgressPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="1" Grid.Row="1">
+            <ProgressBar x:Name="UploadProgressBar" Maximum="100" Minimum="0" Height="50"/>
         </StackPanel>
         
         <StackPanel x:Name="EncodingPanel" Visibility="Collapsed" Grid.Column="2" Grid.Row="1">

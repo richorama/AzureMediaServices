@@ -59,8 +59,7 @@ namespace MediaServicesClient
             if (HandleAssetUploaded == null) throw new Exception("HandleAssetUploaded not subscribed");
             Thread thread = new Thread(() =>
                 {
-                    currentAsset = context.Assets.Create(filePath, assetOption);
-                    
+                    currentAsset = context.Assets.Create(filePath, assetOption);                    
                     HandleAssetUploaded();
                 }
             );
