@@ -109,7 +109,6 @@ namespace MediaServicesClient
                     MediaServicesPanel.Visibility = System.Windows.Visibility.Visible;
 
                     connector.UpdateAssetList();
-                    ObservableCollection<IJob> jobs = new ObservableCollection<IJob>();
                     connector.GetJobs();
                 }
             ));
