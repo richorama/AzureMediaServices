@@ -66,14 +66,6 @@ namespace MediaServicesClient
             thread.Start();
         }
 
-        void Assets_OnUploadProgress(object sender, UploadProgressEventArgs e)
-        {
-            if (OnUploadReceived != null)
-            {
-                OnUploadReceived(e);
-            }
-        }
-
         public void DeleteAsset(IAsset asset)
         {
             if (context == null) throw new ArgumentNullException("context null - can't communicate");
@@ -89,6 +81,15 @@ namespace MediaServicesClient
             );
             thread.Start();
         }
+        public void DeleteAsset(string assetID)
+        {
+            var asset = GetAssetFromID(assetID);
+            if (asset != null)
+            {
+                DeleteAsset(asset);
+            }
+        }
+
         public void DeleteAssets(List<IAsset> assets)
         {
             if (context == null) throw new ArgumentNullException("context null - can't communicate");
@@ -115,25 +116,7 @@ namespace MediaServicesClient
 
             thread.Start();
         }
-        public void DeleteAsset(string assetID)
-        {
-            var asset = GetAssetFromID(assetID);
-            if (asset != null)
-            {
-                DeleteAsset(asset);
-            }
-        }
 
-        private IAsset GetAssetFromID(string assetID)
-        {
-            if (context == null) throw new ArgumentNullException("context null - can't communicate");
-            var asset =
-            from a in context.Assets
-            where a.Id == assetID
-            select a;
-
-            return (asset.First());
-        }
 
         public void EncodeAsset(IAsset asset, List<String> options)
         {
@@ -353,6 +336,25 @@ namespace MediaServicesClient
                 throw new ArgumentException("Unknown Processor");
             }
             return processor;
+        }
+
+        private void Assets_OnUploadProgress(object sender, UploadProgressEventArgs e)
+        {
+            if (OnUploadReceived != null)
+            {
+                OnUploadReceived(e);
+            }
+        }
+
+        private IAsset GetAssetFromID(string assetID)
+        {
+            if (context == null) throw new ArgumentNullException("context null - can't communicate");
+            var asset =
+            from a in context.Assets
+            where a.Id == assetID
+            select a;
+
+            return (asset.First());
         }
     }
 }
