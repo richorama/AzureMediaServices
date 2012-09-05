@@ -16,6 +16,7 @@ using Microsoft.WindowsAzure.MediaServices.Client;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
 using Microsoft.Win32;
+using System.IO;
 
 namespace MediaServicesClient
 {
@@ -156,6 +157,27 @@ namespace MediaServicesClient
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             connector.UpdateAssetList();
+        }
+
+        private void DownloadAsset_Clicked(object sender, RoutedEventArgs e)
+        {
+            IAsset target;
+            if (AssetsListBox.SelectedItems.Count > 0)
+            {
+                target = AssetsListBox.SelectedItems[0] as IAsset;
+                SaveFileDialog dialog = new SaveFileDialog();
+                
+                dialog.FileOk += new System.ComponentModel.CancelEventHandler(dialog_FileOk);
+                dialog.ShowDialog();                
+            }
+        }
+
+        void dialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SaveFileDialog dialog = sender as SaveFileDialog;
+            FileStream fs = new FileStream();
+            
+            // Need to actually somehow save the data to the location or something
         }
     }
 }

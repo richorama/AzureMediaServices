@@ -45,6 +45,7 @@
             </ListBox>
             <Button Content="refresh" Click="Button_Click" />
             <Button Content="delete" Click="DeleteAsset_Clicked"/>
+            <Button Content="Download" Click="DownloadAsset_Clicked" />
         </StackPanel>
         
         <StackPanel x:Name="MediaServicesPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="1" Grid.Row="1">
@@ -56,7 +57,7 @@
             <Button x:Name="EncodeButton" Content="Encode" Click="UploadAsset_Clicked" Visibility="Collapsed" />  
         </StackPanel>
         <StackPanel x:Name="UploadProgressPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="1" Grid.Row="1">
-            <ProgressBar x:Name="UploadProgressBar" Maximum="100" Minimum="0" Height="50"/>
+            <ProgressBar x:Name="UploadProgressBar" Maximum="100" Minimum="0" Height="25"/>
         </StackPanel>
         
         <StackPanel x:Name="EncodingPanel" Visibility="Collapsed" Grid.Column="2" Grid.Row="1">

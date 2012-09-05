@@ -73,6 +73,7 @@ namespace MediaServicesClient
             Thread thread = new Thread(() =>
                 {
                     context.Assets.Delete(asset);
+                    
                     if (HandleAssetDeleted != null)
                     {
                         HandleAssetDeleted();
@@ -116,7 +117,6 @@ namespace MediaServicesClient
 
             thread.Start();
         }
-
 
         public void EncodeAsset(IAsset asset, List<String> options)
         {
