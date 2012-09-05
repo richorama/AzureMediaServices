@@ -1,0 +1,9 @@
+c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\bin\Debug\Converter.exe
+c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\bin\Debug\Converter.pdb
+c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\bin\Debug\Microsoft.WindowsAzure.MediaServices.Client.dll
+c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\bin\Debug\Microsoft.WindowsAzure.StorageClient.dll
+c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\bin\Debug\Microsoft.WindowsAzure.MediaServices.Client.xml
+c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\obj\Debug\Converter.exe
+c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\obj\Debug\Converter.pdb
+c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\bin\Debug\Microsoft.WindowsAzure.StorageClient.xml
+c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\obj\Debug\Converter.csprojResolveAssemblyReference.cache
