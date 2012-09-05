@@ -27,7 +27,6 @@ namespace MediaServicesClient
         public event AssetUploaded HandleAssetUploaded;
         public event AssetDeleted HandleAssetDeleted;
 
-        Boolean checking = true;
         public MediaServicesConnector()
         {
             encodingOptions = getEncodingOptionsAudio();
@@ -46,7 +45,7 @@ namespace MediaServicesClient
 
         public void UploadAsset(String filePath, AssetCreationOptions assetOption)
         {
-            if (context == null) throw new ArgumentNullException("context null");
+            if (context == null) throw new ArgumentNullException("context null - can't communicate");
             if (HandleAssetUploaded == null) throw new Exception("HandleAssetUploaded not subscribed");
             Thread thread = new Thread(() =>
                 {
@@ -59,6 +58,7 @@ namespace MediaServicesClient
 
         public void DeleteAsset(IAsset asset)
         {
+            if (context == null) throw new ArgumentNullException("context null - can't communicate");
             if (HandleAssetDeleted == null) throw new Exception("HandleAssetDeleted not subscribed");
             Thread thread = new Thread(() =>
                 {
@@ -73,7 +73,7 @@ namespace MediaServicesClient
         }
         public void DeleteAssets(List<IAsset> assets)
         {
-
+            if (context == null) throw new ArgumentNullException("context null - can't communicate");
             if (HandleAssetDeleted == null) throw new Exception("HandleAssetDeleted not subscribed");
             Thread thread = new Thread(() =>
                 {
@@ -101,6 +101,7 @@ namespace MediaServicesClient
 
         private IAsset GetAssetFromID(string assetID)
         {
+            if (context == null) throw new ArgumentNullException("context null - can't communicate");
             var asset =
             from a in context.Assets
             where a.Id == assetID
@@ -111,6 +112,8 @@ namespace MediaServicesClient
 
         public void EncodeAsset(IAsset asset, List<String> options)
         {
+            if (context == null) throw new ArgumentNullException("context null - can't communicate");
+
             IJob job = context.Jobs.Create("New Job");
             mediaProcessor = GetMediaProcessor("Windows Azure Media Encoder");
 
@@ -149,6 +152,8 @@ namespace MediaServicesClient
 
         public void UpdateAssetList()
         {
+            if (context == null) throw new ArgumentNullException("context null - can't communicate");
+
             assetsList.Clear();
             foreach (IAsset item in context.Assets.ToList())
             {
@@ -158,6 +163,8 @@ namespace MediaServicesClient
 
         private IMediaProcessor GetMediaProcessor(string mediaProcessor)
         {
+            if (context == null) throw new ArgumentNullException("context null - can't communicate");
+
             var theProcessor =
                                 from p in context.MediaProcessors
                                 where p.Name == mediaProcessor
