@@ -110,7 +110,7 @@ namespace MediaServicesClient
 
                     connector.UpdateAssetList();
                     ObservableCollection<IJob> jobs = new ObservableCollection<IJob>();
-                    connector.getJobs();
+                    connector.GetJobs();
                 }
             ));
         }

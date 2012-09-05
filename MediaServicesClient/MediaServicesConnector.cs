@@ -144,7 +144,18 @@ namespace MediaServicesClient
             EncodeAsset(currentAsset, options);
         }
 
-        public void getJobs()
+        public void UpdateAssetList()
+        {
+            if (context == null) throw new ArgumentNullException("context null - can't communicate");
+
+            assetsList.Clear();
+            foreach (IAsset item in context.Assets.ToList())
+            {
+                assetsList.Add(item);
+            }
+        }
+
+        public void GetJobs()
         {
             ObservableCollection<IJob> jobs = new ObservableCollection<IJob>();
 
@@ -165,18 +176,6 @@ namespace MediaServicesClient
             );
             thread.Start();
         }
-
-        public void UpdateAssetList()
-        {
-            if (context == null) throw new ArgumentNullException("context null - can't communicate");
-
-            assetsList.Clear();
-            foreach (IAsset item in context.Assets.ToList())
-            {
-                assetsList.Add(item);
-            }
-        }
-
         public IJob GetJob(string jobId)
         {
             var job =
