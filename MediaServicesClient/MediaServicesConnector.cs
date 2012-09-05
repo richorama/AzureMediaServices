@@ -12,20 +12,25 @@ namespace MediaServicesClient
     public delegate void ContextAcquired();
     public delegate void AssetUploaded();
     public delegate void AssetDeleted();
+    public delegate void JobsReceived(ObservableCollection<IJob> jobs);
 
     public class MediaServicesConnector
     {
         private CloudMediaContext context;
 
         public ObservableCollection<IAsset> assetsList = new ObservableCollection<IAsset>();
-        public List<String> encodingOptions;
+        public List<String> encodingOptions; // Observable or not?
 
-        private IAsset currentAsset;
+        public IAsset currentAsset { get; private set; }
         private IMediaProcessor mediaProcessor;
 
+        /**
+         * Events for clients
+         * */
         public event ContextAcquired HandleContextAcquired;
         public event AssetUploaded HandleAssetUploaded;
         public event AssetDeleted HandleAssetDeleted;
+        public event JobsReceived HandleJobsReceived;
 
         public MediaServicesConnector()
         {
@@ -79,7 +84,14 @@ namespace MediaServicesClient
                 {
                     foreach (IAsset asset in assets)
                     {
-                        context.Assets.Delete(asset);
+                        try
+                        {
+                            context.Assets.Delete(asset);
+                        }
+                        catch (DataServiceRequestException e)
+                        {
+                            Console.WriteLine("Exception Caught: " + e.Message);
+                        }
                     }
                     if (HandleAssetDeleted != null)
                     {
@@ -113,18 +125,19 @@ namespace MediaServicesClient
         public void EncodeAsset(IAsset asset, List<String> options)
         {
             if (context == null) throw new ArgumentNullException("context null - can't communicate");
+            if (asset == null) throw new ArgumentNullException("asset null - can't upload");
 
-            IJob job = context.Jobs.Create("New Job");
+            IJob job = context.Jobs.Create("");
             mediaProcessor = GetMediaProcessor("Windows Azure Media Encoder");
 
             foreach (String configOption in options)
             {
-                ITask task = job.Tasks.AddNew("My encoding task",
+                ITask task = job.Tasks.AddNew("task " + configOption,
                 mediaProcessor,
                 configOption,
                 TaskCreationOptions.None);
                 task.InputMediaAssets.Add(asset);
-                task.OutputMediaAssets.AddNew("Output asset", true, AssetCreationOptions.None);
+                task.OutputMediaAssets.AddNew(asset.Name + " " + configOption, true, AssetCreationOptions.None);
             }
 
             job.Submit();
@@ -133,6 +146,28 @@ namespace MediaServicesClient
         public void EncodeAsset(List<String> options)
         {
             EncodeAsset(currentAsset, options);
+        }
+
+        public void getJobs()
+        {
+            ObservableCollection<IJob> jobs = new ObservableCollection<IJob>();
+
+            Thread thread = new Thread(() =>
+                {
+                    foreach (IJob job in context.Jobs)
+                    {
+                        Console.WriteLine(job.Name);
+                        Console.WriteLine("Deleting Job: " + job.Name);
+                        DeleteJob(job.Id);
+                        jobs.Add(job);
+                    }
+                    if (HandleJobsReceived != null)
+                    {
+                        HandleJobsReceived(jobs);
+                    }
+                }
+            );
+            thread.Start();
         }
 
         private List<String> getEncodingOptionsAudio()
@@ -245,6 +280,69 @@ namespace MediaServicesClient
                 throw new ArgumentException("Unknown Processor");
             }
             return processor;
+        }
+
+        public IJob GetJob(string jobId)
+        {
+            // Use a Linq select query to get an updated 
+            // reference by Id. 
+            var job =
+                from j in context.Jobs
+                where j.Id == jobId
+                select j;
+            // Return the job reference as an Ijob. 
+            IJob theJob = job.First();
+
+            // Confirm whether job exists, and return. 
+            if (theJob != null)
+            {
+                return theJob;
+            }
+            else
+                Console.WriteLine("Job does not exist.");
+            return null;
+        }
+
+        public void DeleteJob(string jobId)
+        {
+            bool jobDeleted = false;
+
+            while (!jobDeleted)
+            {
+                IJob theJob = GetJob(jobId);
+
+                // Check and handle various possible job states. You can 
+                // only delete a job whose state is Finished, Error, or Canceled.   
+                // You can cancel jobs that are Queued, Scheduled, or Processing,  
+                // and then delete after they are canceled.
+                switch (theJob.State)
+                {
+                    case JobState.Finished:
+                    case JobState.Canceled:
+                        theJob.Delete();
+                        jobDeleted = true;
+                        Console.WriteLine("Job has been deleted.");
+                        break;
+                    case JobState.Canceling:
+                        Console.WriteLine("Job is cancelling and will be deleted "
+                            + "when finished.");
+                        Console.WriteLine("Wait while job finishes canceling...");
+                        Thread.Sleep(5000);
+                        break;
+                    case JobState.Queued:
+                    case JobState.Scheduled:
+                    case JobState.Processing:
+                        theJob.Cancel();
+                        Console.WriteLine("Job is pending or processing and will "
+                            + "be canceled, then deleted.");
+                        break;
+                    case JobState.Error:
+                        // Log error as needed.
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 }

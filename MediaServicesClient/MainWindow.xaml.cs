@@ -39,6 +39,7 @@ namespace MediaServicesClient
             connector.HandleContextAcquired += new ContextAcquired(connector_HandleContextAcquired);
             connector.HandleAssetUploaded += new AssetUploaded(connector_HandleAssetUploaded);
             connector.HandleAssetDeleted += new AssetDeleted(connector_HandleAssetDeleted);
+            connector.HandleJobsReceived += new JobsReceived(connector_HandleJobsReceived);
 
             AssetsListBox.ItemsSource = connector.assetsList;
             foreach (String option in connector.encodingOptions)
@@ -46,6 +47,17 @@ namespace MediaServicesClient
                 encodingOptions.Add(option);
             }
             EncodingOptions.ItemsSource = encodingOptions;
+        }
+
+        void connector_HandleJobsReceived(ObservableCollection<IJob> jobs)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    JobsBox.ItemsSource = jobs;
+                    Console.WriteLine("Jobs Length: " + jobs.Count);
+                    JobsBox.Visibility = System.Windows.Visibility.Visible;
+                }
+            ));            
         }
 
         void connector_HandleAssetDeleted()
@@ -61,6 +73,7 @@ namespace MediaServicesClient
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
                 {
+                    EncodeButton.Visibility = System.Windows.Visibility.Visible;
                     connector.UpdateAssetList();
                 }
             ));
@@ -79,6 +92,8 @@ namespace MediaServicesClient
                     MediaServicesPanel.Visibility = System.Windows.Visibility.Visible;
 
                     connector.UpdateAssetList();
+                    ObservableCollection<IJob> jobs = new ObservableCollection<IJob>();
+                    connector.getJobs();
                 }
             ));
         }

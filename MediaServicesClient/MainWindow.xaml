@@ -34,7 +34,7 @@
             <ProgressBar IsIndeterminate="True" Height="25" />
         </StackPanel>
         <StackPanel x:Name="AssetsPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="0" Grid.Row="1" >
-            <ListBox x:Name="AssetsListBox" Height="300" SelectionMode="Extended">
+            <ListBox x:Name="AssetsListBox" Height="280" SelectionMode="Extended">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" >
@@ -53,11 +53,21 @@
         
         <StackPanel x:Name="UploadPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="1" Grid.Row="1">
             <Label x:Name="CurrentFileLabel" Content="" />
-            <Button Content="Upload" Click="UploadAsset_Clicked" />            
+            <Button x:Name="EncodeButton" Content="Encode" Click="UploadAsset_Clicked" Visibility="Collapsed" />            
         </StackPanel>
         
         <StackPanel x:Name="EncodingPanel" Visibility="Collapsed" Grid.Column="2" Grid.Row="1">
             <ListBox x:Name="EncodingOptions" SelectionMode="Extended">                
+            </ListBox>
+        </StackPanel>
+        
+        <StackPanel x:Name="JobsPanel" Visibility="Collapsed" Grid.Column="1" Grid.Row="0">
+            <ListBox x:Name="JobsBox">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding Path=Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
     </Grid>
