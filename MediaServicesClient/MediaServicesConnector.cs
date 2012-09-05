@@ -150,6 +150,75 @@ namespace MediaServicesClient
             return options;
         }
 
+        private List<String> getEncodingOptionsVideo()
+        {
+            List<String> options = new List<String>();
+            options.Add("H.264 256k DSL CBR");
+            options.Add("H.264 256k DSL VBR");
+            options.Add("H.264 512k DSL CBR");
+            options.Add("H.264 512k DSL VBR");
+            options.Add("H.264 AppleTV");
+            options.Add("H.264 Broadband CBR");
+            options.Add("H.264 Broadband VBR");
+            options.Add("H.264 Facebook HD");
+            options.Add("H.264 Facebook SD");
+            options.Add("H.264 HD 1080p VBR");
+            options.Add("H.264 HD 720p VBR");
+            options.Add("H.264 High Speed Broadband CBR");
+            options.Add("H.264 High Speed Broadband VBR");
+            options.Add("H.264 IIS Smooth Streaming - HD 1080p CBR");
+            options.Add("H.264 IIS Smooth Streaming - HD 720p CBR");
+            options.Add("H.264 IIS Smooth Streaming - Screen Encoding CBR");
+            options.Add("H.264 IIS Smooth Streaming - SD 480p CBR");
+            options.Add("H.264 IIS Smooth Streaming iPhone Cell");
+            options.Add("H.264 IIS Smooth Streaming iPhone WiFi");
+            options.Add("H.264 IIS Smooth Streaming Symbian");
+            options.Add("H.264 IIS Smooth Streaming Windows Phone 7");
+            options.Add("H.264 iPad");
+            options.Add("H.264 iPhone / iPod Touch");
+            options.Add("H.264 iPod Classic / Nano");
+            options.Add("H.264 Motion Thumbnail VBR");
+            options.Add("H.264 Screen Encoding VBR");
+            options.Add("H.264 Silverlight for Symbian");
+            options.Add("H.264 Sony PSP");
+            options.Add("H.264 Vimeo HD");
+            options.Add("H.264 Vimeo SD");
+            options.Add("H.264 Windows Phone 7");
+            options.Add("H.264 YouTube HD");
+            options.Add("H.264 YouTube SD");
+            options.Add("H.264 Zune 2");
+            options.Add("H.264 Zune 2 (AV Dock Playback)");
+            options.Add("H.264 Zune HD");
+            options.Add("H.264 Zune HD (AV Dock Playback)");
+            options.Add("VC-1 256k DSL CBR");
+            options.Add("VC-1 256k DSL VBR");
+            options.Add("VC-1 512k DSL CBR");
+            options.Add("VC-1 512k DSL VBR");
+            options.Add("VC-1 HD 1080p VBR");
+            options.Add("VC-1 HD 720p VBR");
+            options.Add("VC-1 High Speed Broadband CBR");
+            options.Add("VC-1 High Speed Broadband VBR");
+            options.Add("VC-1 IIS Smooth Streaming - HD 1080p VBR");
+            options.Add("VC-1 IIS Smooth Streaming - HD 720p CBR");
+            options.Add("VC-1 IIS Smooth Streaming - HD 720p VBR");
+            options.Add("VC-1 IIS Smooth Streaming - Screen Encoding VBR");
+            options.Add("VC-1 IIS Smooth Streaming - SD 480p VBR");
+            options.Add("VC-1 IIS Smooth Streaming - Windows Phone 7");
+            options.Add("VC-1 Motion Thumbnail VBR");
+            options.Add("VC-1 Screen Encoding VBR");
+            options.Add("VC-1 Windows Mobile");
+            options.Add("VC-1 Windows Phone 7");
+            options.Add("VC-1 Xbox 360 HD 1080p");
+            options.Add("VC-1 Xbox 360 HD 720p");
+            options.Add("VC-1 Zune 1");
+            options.Add("VC-1 Zune 2");
+            options.Add("VC-1 Zune 2 (AV Dock Playback)");
+            options.Add("VC-1 Zune HD");
+            options.Add("VC-1 Zune HD (AV Dock Playback)");
+
+            return options;
+        }
+
         public void UpdateAssetList()
         {
             if (context == null) throw new ArgumentNullException("context null - can't communicate");
