@@ -13,6 +13,7 @@ namespace MediaServicesClient
     public delegate void AssetUploaded();
     public delegate void AssetDeleted();
     public delegate void JobsReceived(ObservableCollection<IJob> jobs);
+    public delegate void UploadReceived(UploadProgressEventArgs e);
 
     public class MediaServicesConnector
     {
@@ -31,6 +32,7 @@ namespace MediaServicesClient
         public event AssetUploaded HandleAssetUploaded;
         public event AssetDeleted HandleAssetDeleted;
         public event JobsReceived HandleJobsReceived;
+        public event UploadReceived OnUploadReceived;
 
         public MediaServicesConnector()
         {
@@ -42,6 +44,9 @@ namespace MediaServicesClient
             Thread thread = new Thread(() =>
                 {
                     context = new CloudMediaContext(accountName, accountKey);
+
+                    context.Assets.OnUploadProgress += new EventHandler<UploadProgressEventArgs>(Assets_OnUploadProgress);
+
                     HandleContextAcquired();
                 }
             );
@@ -55,10 +60,19 @@ namespace MediaServicesClient
             Thread thread = new Thread(() =>
                 {
                     currentAsset = context.Assets.Create(filePath, assetOption);
+                    
                     HandleAssetUploaded();
                 }
             );
             thread.Start();
+        }
+
+        void Assets_OnUploadProgress(object sender, UploadProgressEventArgs e)
+        {
+            if (OnUploadReceived != null)
+            {
+                OnUploadReceived(e);
+            }
         }
 
         public void DeleteAsset(IAsset asset)
