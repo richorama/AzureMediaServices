@@ -184,6 +184,77 @@ namespace MediaServicesClient
             thread.Start();
         }
 
+        public void UpdateAssetList()
+        {
+            if (context == null) throw new ArgumentNullException("context null - can't communicate");
+
+            assetsList.Clear();
+            foreach (IAsset item in context.Assets.ToList())
+            {
+                assetsList.Add(item);
+            }
+        }
+
+        public IJob GetJob(string jobId)
+        {
+            var job =
+                from j in context.Jobs
+                where j.Id == jobId
+                select j;
+
+            IJob theJob = job.First();
+
+            if (theJob != null)
+            {
+                return theJob;
+            }
+            else
+                Console.WriteLine("Job does not exist.");
+            return null;
+        }
+
+        public void DeleteJob(string jobId)
+        {
+            bool jobDeleted = false;
+
+            while (!jobDeleted)
+            {
+                IJob theJob = GetJob(jobId);
+
+                // Check and handle various possible job states. You can 
+                // only delete a job whose state is Finished, Error, or Canceled.   
+                // You can cancel jobs that are Queued, Scheduled, or Processing,  
+                // and then delete after they are canceled.
+                switch (theJob.State)
+                {
+                    case JobState.Finished:
+                    case JobState.Canceled:
+                        theJob.Delete();
+                        jobDeleted = true;
+                        Console.WriteLine("Job has been deleted.");
+                        break;
+                    case JobState.Canceling:
+                        Console.WriteLine("Job is cancelling and will be deleted "
+                            + "when finished.");
+                        Console.WriteLine("Wait while job finishes canceling...");
+                        Thread.Sleep(5000);
+                        break;
+                    case JobState.Queued:
+                    case JobState.Scheduled:
+                    case JobState.Processing:
+                        theJob.Cancel();
+                        Console.WriteLine("Job is pending or processing and will "
+                            + "be canceled, then deleted.");
+                        break;
+                    case JobState.Error:
+                        // Log error as needed.
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         private List<String> getEncodingOptionsAudio()
         {
             List<String> options = new List<String>();
@@ -266,18 +337,7 @@ namespace MediaServicesClient
             options.Add("VC-1 Zune HD (AV Dock Playback)");
 
             return options;
-        }
-
-        public void UpdateAssetList()
-        {
-            if (context == null) throw new ArgumentNullException("context null - can't communicate");
-
-            assetsList.Clear();
-            foreach (IAsset item in context.Assets.ToList())
-            {
-                assetsList.Add(item);
-            }
-        }
+        }       
 
         private IMediaProcessor GetMediaProcessor(string mediaProcessor)
         {
@@ -294,69 +354,6 @@ namespace MediaServicesClient
                 throw new ArgumentException("Unknown Processor");
             }
             return processor;
-        }
-
-        public IJob GetJob(string jobId)
-        {
-            // Use a Linq select query to get an updated 
-            // reference by Id. 
-            var job =
-                from j in context.Jobs
-                where j.Id == jobId
-                select j;
-            // Return the job reference as an Ijob. 
-            IJob theJob = job.First();
-
-            // Confirm whether job exists, and return. 
-            if (theJob != null)
-            {
-                return theJob;
-            }
-            else
-                Console.WriteLine("Job does not exist.");
-            return null;
-        }
-
-        public void DeleteJob(string jobId)
-        {
-            bool jobDeleted = false;
-
-            while (!jobDeleted)
-            {
-                IJob theJob = GetJob(jobId);
-
-                // Check and handle various possible job states. You can 
-                // only delete a job whose state is Finished, Error, or Canceled.   
-                // You can cancel jobs that are Queued, Scheduled, or Processing,  
-                // and then delete after they are canceled.
-                switch (theJob.State)
-                {
-                    case JobState.Finished:
-                    case JobState.Canceled:
-                        theJob.Delete();
-                        jobDeleted = true;
-                        Console.WriteLine("Job has been deleted.");
-                        break;
-                    case JobState.Canceling:
-                        Console.WriteLine("Job is cancelling and will be deleted "
-                            + "when finished.");
-                        Console.WriteLine("Wait while job finishes canceling...");
-                        Thread.Sleep(5000);
-                        break;
-                    case JobState.Queued:
-                    case JobState.Scheduled:
-                    case JobState.Processing:
-                        theJob.Cancel();
-                        Console.WriteLine("Job is pending or processing and will "
-                            + "be canceled, then deleted.");
-                        break;
-                    case JobState.Error:
-                        // Log error as needed.
-                        break;
-                    default:
-                        break;
-                }
-            }
         }
     }
 }
