@@ -161,10 +161,8 @@ namespace MediaServicesClient
 
         private void DownloadAsset_Clicked(object sender, RoutedEventArgs e)
         {
-            IAsset target;
             if (AssetsListBox.SelectedItems.Count > 0)
             {
-                target = AssetsListBox.SelectedItems[0] as IAsset;
                 SaveFileDialog dialog = new SaveFileDialog();
                 
                 dialog.FileOk += new System.ComponentModel.CancelEventHandler(dialog_FileOk);
