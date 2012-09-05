@@ -12,8 +12,6 @@ namespace MediaServicesClient
     public delegate void ContextAcquired();
     public delegate void AssetUploaded();
     public delegate void AssetDeleted();
-    public delegate void RegularCheck();
-
 
     public class MediaServicesConnector
     {
@@ -28,7 +26,6 @@ namespace MediaServicesClient
         public event ContextAcquired HandleContextAcquired;
         public event AssetUploaded HandleAssetUploaded;
         public event AssetDeleted HandleAssetDeleted;
-        public event RegularCheck HandleRegularCheck;
 
         Boolean checking = true;
         public MediaServicesConnector()
@@ -41,7 +38,6 @@ namespace MediaServicesClient
             Thread thread = new Thread(() =>
                 {
                     context = new CloudMediaContext(accountName, accountKey);
-                    //startRegularChecks();
                     HandleContextAcquired();
                 }
             );
@@ -173,28 +169,6 @@ namespace MediaServicesClient
                 throw new ArgumentException("Unknown Processor");
             }
             return processor;
-        }
-
-        private void startRegularChecks()
-        {
-            Thread thread = new Thread(() =>
-                {
-                    while (false)
-                    {
-
-                        Thread.Sleep(1000);
-                        if (context.Assets.ToList().Count() != assetsList.Count)
-                        {
-                            if (HandleRegularCheck != null)
-                            {
-                                HandleRegularCheck();
-                            }
-                        }
-                    }
-                }
-            );
-
-            thread.Start();
         }
     }
 }

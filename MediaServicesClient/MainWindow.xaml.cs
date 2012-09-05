@@ -39,7 +39,6 @@ namespace MediaServicesClient
             connector.HandleContextAcquired += new ContextAcquired(connector_HandleContextAcquired);
             connector.HandleAssetUploaded += new AssetUploaded(connector_HandleAssetUploaded);
             connector.HandleAssetDeleted += new AssetDeleted(connector_HandleAssetDeleted);
-            connector.HandleRegularCheck += new RegularCheck(connector_HandleRegularCheck);
 
             AssetsListBox.ItemsSource = connector.assetsList;
             foreach (String option in connector.encodingOptions)
@@ -47,15 +46,6 @@ namespace MediaServicesClient
                 encodingOptions.Add(option);
             }
             EncodingOptions.ItemsSource = encodingOptions;
-        }
-
-        void connector_HandleRegularCheck()
-        {
-            this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    connector.UpdateAssetList();
-                }
-            ));
         }
 
         void connector_HandleAssetDeleted()
@@ -83,6 +73,7 @@ namespace MediaServicesClient
                     LoggingInPanel.Visibility = System.Windows.Visibility.Collapsed;
 
                     AccountLabel.Content = AccountNameBox.Text;
+
                     AssetsPanel.Visibility = System.Windows.Visibility.Visible;
                     AccountPanel.Visibility = System.Windows.Visibility.Visible;
                     MediaServicesPanel.Visibility = System.Windows.Visibility.Visible;
@@ -106,9 +97,8 @@ namespace MediaServicesClient
 
         private void UploadAsset_Clicked(object sender, RoutedEventArgs e)
         {
-            var selections = EncodingOptions.SelectedItems;
             List<String> options = new List<String>();
-            foreach (var selection in selections)
+            foreach (var selection in EncodingOptions.SelectedItems)
             {
                 options.Add(selection as String);
             }
