@@ -173,9 +173,16 @@ namespace MediaServicesClient
         void dialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SaveFileDialog dialog = sender as SaveFileDialog;
-            FileStream fs = new FileStream();
-            
-            // Need to actually somehow save the data to the location or something
+
+            IAsset asset = AssetsListBox.SelectedItems[0] as IAsset;
+            if (asset.Files.Count > 0)
+            {
+                asset.Files[0].DownloadToFile(dialog.FileName);
+            }
+            else
+            {
+                Console.WriteLine("Nothing to download");
+            }
         }
     }
 }
