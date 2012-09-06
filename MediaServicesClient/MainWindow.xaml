@@ -5,31 +5,32 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.2*" />
-            <ColumnDefinition Width="0.6*" />
+            <ColumnDefinition Width="0.2*" />
+            <ColumnDefinition Width="0.4*" />
             <ColumnDefinition Width="0.2*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="0.1*" />
             <RowDefinition Height="0.6*" />
-            <RowDefinition Height="0.2*" />           
+            <RowDefinition Height="0.1*" />           
         </Grid.RowDefinitions>
         <StackPanel Visibility="Collapsed" x:Name="AccountPanel" Orientation="Vertical" Grid.Column="0" Grid.Row="0">
             <Label Content="Account: " />
             <Label x:Name="AccountLabel" Content="" />
         </StackPanel>
-        <StackPanel Visibility="Visible" x:Name="LoginPanel" Orientation="Vertical" Grid.Column="1" Grid.Row="1">
+        <StackPanel Visibility="Visible" x:Name="LoginPanel" Orientation="Vertical" Grid.Column="2" Grid.Row="1">
             <Label Content="Login" />
             <StackPanel Orientation="Horizontal">
                 <Label Width="100" Content="Account Name" />
-                <TextBox x:Name="AccountNameBox" Width="361" Text="pierstest" />
+                <TextBox x:Name="AccountNameBox" Width="200" Text="pierstest" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Width="100" Content="Account Key" />
-                <TextBox x:Name="AccountKeyBox" Width="361" Text="pz6FkbQ50lEgPPClMKuz7isNlzU1yj7eYVGQTzvQzLQ=" />
+                <TextBox x:Name="AccountKeyBox" Width="200" Text="pz6FkbQ50lEgPPClMKuz7isNlzU1yj7eYVGQTzvQzLQ=" />
             </StackPanel>
             <Button Content="Login" Click="LoginButton_Clicked" />
         </StackPanel>
-        <StackPanel  x:Name="LoggingInPanel" Visibility="Collapsed" Grid.Column="1" Grid.Row="1">
+        <StackPanel  x:Name="LoggingInPanel" Visibility="Collapsed" Grid.Column="2" Grid.Row="1">
             <Label Content="Logging in ..." />
             <ProgressBar IsIndeterminate="True" Height="25" />
         </StackPanel>
@@ -38,7 +39,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" >
-                            <Label Content="{Binding Path=Name}" />                          
+                            <Label Content="{Binding Path=Name}" />                              
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -48,28 +49,38 @@
             <Button Content="Download" Click="DownloadAsset_Clicked" />
         </StackPanel>
         
-        <StackPanel x:Name="MediaServicesPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="1" Grid.Row="1">
+        <StackPanel x:Name="MediaServicesPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="2" Grid.Row="1">
             <Button Content="Browse for file" Click="ShowDialogButton_Clicked" />
         </StackPanel>
         
-        <StackPanel x:Name="UploadPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="1" Grid.Row="1">
+        <StackPanel x:Name="UploadPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="2" Grid.Row="1">
             <Label x:Name="CurrentFileLabel" Content="" />
             <Button x:Name="EncodeButton" Content="Encode" Click="UploadAsset_Clicked" Visibility="Collapsed" />  
         </StackPanel>
-        <StackPanel x:Name="UploadProgressPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="1" Grid.Row="1">
+        <StackPanel x:Name="UploadProgressPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="2" Grid.Row="1">
             <ProgressBar x:Name="UploadProgressBar" Maximum="100" Minimum="0" Height="25"/>
         </StackPanel>
         
-        <StackPanel x:Name="EncodingPanel" Visibility="Collapsed" Grid.Column="2" Grid.Row="1">
+        <StackPanel x:Name="EncodingPanel" Visibility="Collapsed" Grid.Column="3" Grid.Row="1">
             <ListBox x:Name="EncodingOptions" SelectionMode="Extended">                
             </ListBox>
         </StackPanel>
         
-        <StackPanel x:Name="JobsPanel" Visibility="Collapsed" Grid.Column="1" Grid.Row="0">
+        <StackPanel x:Name="JobsPanel" Visibility="Collapsed" Grid.Column="2" Grid.Row="0">
             <ListBox x:Name="JobsBox">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Label Content="{Binding Path=Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+        
+        <StackPanel x:Name="ChildPanel" Visibility="Collapsed" Grid.Column="1" Grid.Row="1">
+            <ListBox x:Name="ChildBox" Height="260">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

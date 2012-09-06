@@ -44,18 +44,25 @@ namespace MediaServicesClient
             connector.HandleJobsReceived += new JobsReceived(connector_HandleJobsReceived);
             connector.OnUploadReceived += new UploadReceived(connector_OnUploadReceived);
 
-            AssetsListBox.ItemsSource = connector.assetsList;
+            AssetsListBox.ItemsSource = connector.MediaAssets;
             foreach (String option in connector.encodingOptions)
             {
                 encodingOptions.Add(option);
             }
             EncodingOptions.ItemsSource = encodingOptions;
+
+            AssetsListBox.SelectionChanged += new SelectionChangedEventHandler(AssetsListBox_SelectionChanged);
+        }
+
+        void AssetsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var itemSource = (e.AddedItems[0] as MediaAsset).Children;
+            Console.WriteLine("Number of children: " + itemSource.Count);
+            ChildBox.ItemsSource = itemSource;
         }
 
         void connector_OnUploadReceived(UploadProgressEventArgs e)
         {
-            //Console.WriteLine("Upload Progress Received");
-            //Console.WriteLine(e.Progress);
             this.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     UploadProgressBar.Value = e.Progress;
@@ -107,6 +114,7 @@ namespace MediaServicesClient
                     AccountLabel.Content = AccountNameBox.Text;
 
                     AssetsPanel.Visibility = System.Windows.Visibility.Visible;
+                    ChildPanel.Visibility = System.Windows.Visibility.Visible;
                     AccountPanel.Visibility = System.Windows.Visibility.Visible;
                     MediaServicesPanel.Visibility = System.Windows.Visibility.Visible;
 

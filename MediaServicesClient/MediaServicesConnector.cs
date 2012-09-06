@@ -22,6 +22,8 @@ namespace MediaServicesClient
         public ObservableCollection<IAsset> assetsList = new ObservableCollection<IAsset>();
         public List<String> encodingOptions; // Observable or not?
 
+        public ObservableCollection<MediaAsset> MediaAssets = new ObservableCollection<MediaAsset>();
+
         public IAsset currentAsset { get; private set; }
         private IMediaProcessor mediaProcessor;
 
@@ -147,17 +149,23 @@ namespace MediaServicesClient
         public void UpdateAssetList()
         {
             if (context == null) throw new ArgumentNullException("context null - can't communicate");
-
+            MediaAssets.Clear();
             assetsList.Clear();
             foreach (IAsset item in context.Assets.ToList())
             {
                 assetsList.Add(item);
-
-                Console.WriteLine(item.Name);
-                Console.WriteLine(item.ParentAssets);
-                Console.WriteLine(item.Id);
-              
+                if (item.ParentAssets.Count == 0)
+                {
+                    MediaAssets.Add(new MediaAsset(item));
+                }              
             }
+            foreach (IAsset item in context.Assets.ToList())
+            {
+                foreach (MediaAsset asset in MediaAssets)
+                {
+                    asset.AddChildIfChild(item);
+                }
+            }            
         }
 
         public void GetJobs()
