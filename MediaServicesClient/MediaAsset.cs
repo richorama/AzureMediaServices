@@ -50,22 +50,15 @@ namespace MediaServicesClient
         public String Name
         {
             get
-            {
-                if (root.ParentAssets.Count == 0)
+            {               
+                if (root.Files.Count != 0)
                 {
-                    return root.Name;
+                    return root.Files[0].Name;
                 }
                 else
                 {
-                    if (root.Files.Count != 0)
-                    {
-                        return root.Files[0].Name;
-                    }
-                    else
-                    {
-                        return root.Name;
-                    }
-                }
+                    return root.Name;
+                }                
             }
         }
         
@@ -79,6 +72,7 @@ namespace MediaServicesClient
                 {
                     names.Add(asset);                    
                 }
+                names.Add(new MediaAsset(root));
                 return names;
             }
         }
