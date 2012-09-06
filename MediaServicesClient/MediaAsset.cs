@@ -59,7 +59,14 @@ namespace MediaServicesClient
                 }
                 else
                 {
-                    return root.Files[0].Name;
+                    if (root.Files.Count != 0)
+                    {
+                        return root.Files[0].Name;
+                    }
+                    else
+                    {
+                        return root.Name;
+                    }
                 }
             }
         }
