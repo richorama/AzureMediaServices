@@ -56,9 +56,12 @@ namespace MediaServicesClient
 
         void AssetsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var itemSource = (e.AddedItems[0] as MediaAsset).Children;
-            Console.WriteLine("Number of children: " + itemSource.Count);
-            ChildBox.ItemsSource = itemSource;
+            if (e.AddedItems.Count > 0)
+            {
+                var itemSource = (e.AddedItems[0] as MediaAsset).Children;
+                Console.WriteLine("Number of children: " + itemSource.Count);
+                ChildBox.ItemsSource = itemSource;
+            }
         }
 
         void connector_OnUploadReceived(UploadProgressEventArgs e)

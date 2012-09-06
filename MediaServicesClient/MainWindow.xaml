@@ -44,8 +44,8 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Button Content="refresh" Click="Button_Click" />
-            <Button Content="delete" Click="DeleteAsset_Clicked"/>
+            <Button Content="Refresh" Click="Button_Click" />
+            <Button Content="Delete" Click="DeleteAsset_Clicked"/>
             <Button Content="Download" Click="DownloadAsset_Clicked" />
         </StackPanel>
         
