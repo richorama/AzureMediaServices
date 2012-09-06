@@ -80,7 +80,7 @@
             <ListBox x:Name="ChildBox" Height="260">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Label Content="{Binding}" />
+                        <Label Content="{Binding Path=Name}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

@@ -103,9 +103,9 @@ namespace MediaServicesClient
             }
         }
 
-        public static implicit operator IAsset(MediaAsset asset)
+        public IAsset GetIAsset()
         {
-            return asset.root;
+            return this.root;
         }
     }
 }
