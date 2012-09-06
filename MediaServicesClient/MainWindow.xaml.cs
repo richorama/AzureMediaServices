@@ -183,7 +183,7 @@ namespace MediaServicesClient
         {
             SaveFileDialog dialog = sender as SaveFileDialog;
 
-            IAsset asset = AssetsListBox.SelectedItems[0] as IAsset;
+            IAsset asset = ChildBox.SelectedItems[0] as IAsset;
             if (asset.Files.Count > 0)
             {
                 Thread thread = new Thread(() =>

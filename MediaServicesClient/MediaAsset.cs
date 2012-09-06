@@ -46,28 +46,33 @@ namespace MediaServicesClient
 
     public class MediaAsset
     {
-        IAsset root;
-        List<IAsset> children = new List<IAsset>();
+        private IAsset root;
+        private List<MediaAsset> children = new List<MediaAsset>();
 
         public String Name
         {
             get
             {
-                return root.Name;
+                if (root.ParentAssets.Count == 0)
+                {
+                    return root.Name;
+                }
+                else
+                {
+                    return root.Files[0].Name;
+                }
             }
         }
         
-        public ObservableCollection<String> Children
+
+        public ObservableCollection<MediaAsset> Children
         {
             get
             {
-                ObservableCollection<String> names = new ObservableCollection<String>();
-                foreach (IAsset asset in children)
+                ObservableCollection<MediaAsset> names = new ObservableCollection<MediaAsset>();
+                foreach (MediaAsset asset in children)
                 {
-                    if (asset.Files.Count > 0)
-                    {
-                        names.Add(asset.Files[0].Name);
-                    }
+                    names.Add(asset);                    
                 }
                 return names;
             }
@@ -84,7 +89,7 @@ namespace MediaServicesClient
             {
                 if (newChild.ParentAssets[0].Id == root.Id)
                 {
-                    children.Add(newChild);
+                    children.Add(new MediaAsset(newChild));
                     Console.WriteLine("Child added");
                 }
                 else
@@ -96,6 +101,11 @@ namespace MediaServicesClient
             {
                 Console.WriteLine("No Parent Assets");
             }
+        }
+
+        public static implicit operator IAsset(MediaAsset asset)
+        {
+            return asset.root;
         }
     }
 }
