@@ -60,8 +60,7 @@ namespace MediaServicesClient
                     return root.Name;
                 }                
             }
-        }
-        
+        }        
 
         public ObservableCollection<MediaAsset> Children
         {
@@ -89,16 +88,7 @@ namespace MediaServicesClient
                 if (newChild.ParentAssets[0].Id == root.Id)
                 {
                     children.Add(new MediaAsset(newChild));
-                    Console.WriteLine("Child added");
                 }
-                else
-                {
-                    Console.WriteLine("Child not related to root");
-                }
-            }
-            else
-            {
-                Console.WriteLine("No Parent Assets");
             }
         }
 
