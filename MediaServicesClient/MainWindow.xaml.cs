@@ -124,6 +124,26 @@ namespace MediaServicesClient
             ));
         }
 
+        void dialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SaveFileDialog dialog = sender as SaveFileDialog;
+
+            IAsset asset = (ChildBox.SelectedItems[0] as MediaAsset).GetIAsset();
+            if (asset.Files.Count > 0)
+            {
+                Thread thread = new Thread(() =>
+                {
+                    asset.Files[0].DownloadToFile(dialog.FileName);
+                }
+                );
+                thread.Start();
+            }
+            else
+            {
+                Console.WriteLine("Nothing to download");
+            }
+        }
+
         private void LoginButton_Clicked(object sender, RoutedEventArgs e)
         {
             LoginPanel.Visibility = System.Windows.Visibility.Collapsed;
@@ -177,26 +197,6 @@ namespace MediaServicesClient
                 dialog.FileOk += new System.ComponentModel.CancelEventHandler(dialog_FileOk);
                 dialog.ShowDialog();                
             }
-        }
-
-        void dialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            SaveFileDialog dialog = sender as SaveFileDialog;
-
-            IAsset asset = (ChildBox.SelectedItems[0] as MediaAsset).GetIAsset();
-            if (asset.Files.Count > 0)
-            {
-                Thread thread = new Thread(() =>
-                    {
-                        asset.Files[0].DownloadToFile(dialog.FileName);
-                    }
-                );
-                thread.Start();
-            }
-            else
-            {
-                Console.WriteLine("Nothing to download");
-            }
-        }
+        }       
     }
 }
