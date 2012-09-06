@@ -16,6 +16,8 @@ using Microsoft.WindowsAzure.MediaServices.Client;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
 using Microsoft.Win32;
+using System.IO;
+using System.Threading;
 
 namespace MediaServicesClient
 {
@@ -42,18 +44,25 @@ namespace MediaServicesClient
             connector.HandleJobsReceived += new JobsReceived(connector_HandleJobsReceived);
             connector.OnUploadReceived += new UploadReceived(connector_OnUploadReceived);
 
-            AssetsListBox.ItemsSource = connector.assetsList;
+            AssetsListBox.ItemsSource = connector.MediaAssets;
             foreach (String option in connector.encodingOptions)
             {
                 encodingOptions.Add(option);
             }
             EncodingOptions.ItemsSource = encodingOptions;
+
+            AssetsListBox.SelectionChanged += new SelectionChangedEventHandler(AssetsListBox_SelectionChanged);
+        }
+
+        void AssetsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var itemSource = (e.AddedItems[0] as MediaAsset).Children;
+            Console.WriteLine("Number of children: " + itemSource.Count);
+            ChildBox.ItemsSource = itemSource;
         }
 
         void connector_OnUploadReceived(UploadProgressEventArgs e)
         {
-            //Console.WriteLine("Upload Progress Received");
-            //Console.WriteLine(e.Progress);
             this.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     UploadProgressBar.Value = e.Progress;
@@ -105,6 +114,7 @@ namespace MediaServicesClient
                     AccountLabel.Content = AccountNameBox.Text;
 
                     AssetsPanel.Visibility = System.Windows.Visibility.Visible;
+                    ChildPanel.Visibility = System.Windows.Visibility.Visible;
                     AccountPanel.Visibility = System.Windows.Visibility.Visible;
                     MediaServicesPanel.Visibility = System.Windows.Visibility.Visible;
 
@@ -156,6 +166,37 @@ namespace MediaServicesClient
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             connector.UpdateAssetList();
+        }
+
+        private void DownloadAsset_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (AssetsListBox.SelectedItems.Count > 0)
+            {
+                SaveFileDialog dialog = new SaveFileDialog();
+                
+                dialog.FileOk += new System.ComponentModel.CancelEventHandler(dialog_FileOk);
+                dialog.ShowDialog();                
+            }
+        }
+
+        void dialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SaveFileDialog dialog = sender as SaveFileDialog;
+
+            IAsset asset = AssetsListBox.SelectedItems[0] as IAsset;
+            if (asset.Files.Count > 0)
+            {
+                Thread thread = new Thread(() =>
+                    {
+                        asset.Files[0].DownloadToFile(dialog.FileName);
+                    }
+                );
+                thread.Start();
+            }
+            else
+            {
+                Console.WriteLine("Nothing to download");
+            }
         }
     }
 }
