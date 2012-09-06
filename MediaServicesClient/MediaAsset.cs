@@ -7,6 +7,43 @@ using System.Collections.ObjectModel;
 
 namespace MediaServicesClient
 {
+    public class MediaAssetCollection
+    {
+        List<MediaAsset> assets = new List<MediaAsset>();
+
+        public MediaAssetCollection(List<IAsset> assetList)
+        {
+            ProcessAssets(assetList);
+        }
+        public MediaAssetCollection(BaseAssetCollection assetCollection)
+        {
+            List<IAsset> assetList = new List<IAsset>();
+            foreach (IAsset asset in assetCollection)
+            {
+                assetList.Add(asset);
+            }
+            ProcessAssets(assetList);
+        }
+
+        private void ProcessAssets(List<IAsset> assetList)
+        {
+            foreach (IAsset asset in assetList)
+            {
+                if (asset.ParentAssets.Count == 0)
+                {
+                    assets.Add(new MediaAsset(asset));
+                }
+            }
+            foreach (IAsset asset in assetList)
+            {
+                foreach (MediaAsset mediaAsset in assets)
+                {
+                    mediaAsset.AddChildIfChild(asset);
+                }
+            }
+        }
+    }
+
     public class MediaAsset
     {
         IAsset root;
