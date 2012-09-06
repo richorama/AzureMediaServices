@@ -169,9 +169,10 @@ namespace MediaServicesClient
         private void DeleteAsset_Clicked(object sender, RoutedEventArgs e)
         {
             List<IAsset> assets = new List<IAsset>();
-            foreach (IAsset asset in AssetsListBox.SelectedItems)
+            var selectedItems = (AssetsListBox.SelectedItems.Count == 0) ? ChildBox.SelectedItems : AssetsListBox.SelectedItems;
+            foreach (MediaAsset asset in selectedItems)
             {
-                assets.Add(asset);
+                assets.Add(asset.GetIAsset());
             }
             connector.DeleteAssets(assets);
         }

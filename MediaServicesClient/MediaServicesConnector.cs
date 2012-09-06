@@ -176,9 +176,6 @@ namespace MediaServicesClient
                 {
                     foreach (IJob job in context.Jobs)
                     {
-                        Console.WriteLine(job.Name);
-                        Console.WriteLine("Deleting Job: " + job.Name);
-                        DeleteJob(job.Id);
                         jobs.Add(job);
                     }
                     if (HandleJobsReceived != null)
