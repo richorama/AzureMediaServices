@@ -83,6 +83,7 @@ namespace MediaServicesClient
             );
             thread.Start();
         }
+
         public void DeleteAsset(string assetID)
         {
             var asset = GetAssetFromID(assetID);
@@ -185,6 +186,7 @@ namespace MediaServicesClient
             );
             thread.Start();
         }
+
         public IJob GetJob(string jobId)
         {
             var job =

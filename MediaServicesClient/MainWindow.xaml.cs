@@ -124,9 +124,9 @@ namespace MediaServicesClient
             if (asset.Files.Count > 0)
             {
                 Thread thread = new Thread(() =>
-                {
-                    asset.Files[0].DownloadToFile(dialog.FileName);
-                }
+                    {
+                        asset.Files[0].DownloadToFile(dialog.FileName);
+                    }
                 );
                 thread.Start();
             }
