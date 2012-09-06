@@ -1,9 +1,5 @@
 <<<<<<< HEAD
-lsdRepo
-=======
 
-Repository of lsdale
-=======
 AzureMediaServices
 ==================
 
