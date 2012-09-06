@@ -152,6 +152,11 @@ namespace MediaServicesClient
             foreach (IAsset item in context.Assets.ToList())
             {
                 assetsList.Add(item);
+
+                Console.WriteLine(item.Name);
+                Console.WriteLine(item.ParentAssets);
+                Console.WriteLine(item.Id);
+              
             }
         }
 

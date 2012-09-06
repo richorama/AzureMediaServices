@@ -34,7 +34,7 @@
             <ProgressBar IsIndeterminate="True" Height="25" />
         </StackPanel>
         <StackPanel x:Name="AssetsPanel" Visibility="Collapsed" Orientation="Vertical" Grid.Column="0" Grid.Row="1" >
-            <ListBox x:Name="AssetsListBox" Height="280" SelectionMode="Extended">
+            <ListBox x:Name="AssetsListBox" Height="260" SelectionMode="Extended">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" >

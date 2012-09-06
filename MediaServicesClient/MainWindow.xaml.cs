@@ -17,6 +17,7 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 using Microsoft.Win32;
 using System.IO;
+using System.Threading;
 
 namespace MediaServicesClient
 {
@@ -177,7 +178,12 @@ namespace MediaServicesClient
             IAsset asset = AssetsListBox.SelectedItems[0] as IAsset;
             if (asset.Files.Count > 0)
             {
-                asset.Files[0].DownloadToFile(dialog.FileName);
+                Thread thread = new Thread(() =>
+                    {
+                        asset.Files[0].DownloadToFile(dialog.FileName);
+                    }
+                );
+                thread.Start();
             }
             else
             {
