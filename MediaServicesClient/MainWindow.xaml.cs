@@ -28,7 +28,6 @@ namespace MediaServicesClient
             connector.HandleContextAcquired += new ContextAcquired(connector_HandleContextAcquired);
             connector.HandleAssetUploaded += new AssetUploaded(connector_HandleAssetUploaded);
             connector.HandleAssetDeleted += new AssetDeleted(connector_HandleAssetDeleted);
-            connector.HandleJobsReceived += new JobsReceived(connector_HandleJobsReceived);
             connector.OnUploadReceived += new UploadReceived(connector_OnUploadReceived);
 
             // Set the item source to display onscreen
@@ -63,18 +62,6 @@ namespace MediaServicesClient
                     UploadProgressBar.Value = e.Progress;
                 }
             ));
-        }
-
-        void connector_HandleJobsReceived(ObservableCollection<IJob> jobs)
-        {
-            this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    // Display jobs, mostly irrelevant
-                    JobsBox.ItemsSource = jobs;
-                    Console.WriteLine("Jobs Length: " + jobs.Count);
-                    JobsBox.Visibility = System.Windows.Visibility.Visible;
-                }
-            ));            
         }
 
         void connector_HandleAssetDeleted()
@@ -117,7 +104,6 @@ namespace MediaServicesClient
                     MediaServicesPanel.Visibility = System.Windows.Visibility.Visible;
 
                     connector.UpdateAssetList();
-                    connector.GetJobs();
                 }
             ));
         }

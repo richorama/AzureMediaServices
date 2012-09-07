@@ -66,16 +66,6 @@
             </ListBox>
         </StackPanel>
         
-        <StackPanel x:Name="JobsPanel" Visibility="Collapsed" Grid.Column="2" Grid.Row="0">
-            <ListBox x:Name="JobsBox">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Label Content="{Binding Path=Name}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </StackPanel>
-        
         <StackPanel x:Name="ChildPanel" Visibility="Collapsed" Grid.Column="1" Grid.Row="1">
             <ListBox x:Name="ChildBox" Height="260">
                 <ListBox.ItemTemplate>
