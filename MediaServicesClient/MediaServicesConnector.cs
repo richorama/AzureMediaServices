@@ -6,6 +6,10 @@ using Microsoft.WindowsAzure.MediaServices.Client;
 using System.Collections.ObjectModel;
 using System.Data.Services.Client;
 
+
+/**
+ * Large quantities of this code is based on the Microsoft Sample code
+ * */
 namespace MediaServicesClient
 {
     public delegate void ContextAcquired();
