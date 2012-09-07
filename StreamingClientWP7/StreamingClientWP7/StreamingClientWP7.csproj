@@ -50,6 +50,14 @@
   <ItemGroup>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Interop" />
+    <Reference Include="Microsoft.SilverlightMediaFramework.Compatibility.Phone, Version=2.2012.605.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.SilverlightMediaFramework.Core.Phone, Version=2.2012.605.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.SilverlightMediaFramework.Plugins.Phone, Version=2.2012.605.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.SilverlightMediaFramework.Plugins.Progressive.Phone, Version=2.2012.605.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.SilverlightMediaFramework.Plugins.SmoothStreaming.Phone, Version=2.2012.605.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.SilverlightMediaFramework.Plugins.TimedText.Phone, Version=2.2012.605.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.SilverlightMediaFramework.Utilities.Phone, Version=2.2012.605.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Web.Media.SmoothStreaming, Version=1.1.837.146, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
@@ -87,54 +95,10 @@
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Junk\Microsoft.Logging.LocalConnection.dll" />
-    <Content Include="Junk\Microsoft.Logging.LocalConnection.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Core.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Core.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Core.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Diagnostics.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Diagnostics.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Diagnostics.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Logging.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Logging.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Logging.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Advertising.Adaptive.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Advertising.Adaptive.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Advertising.Adaptive.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Advertising.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Advertising.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Advertising.Xap.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Advertising.Xap.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Advertising.Xap.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Advertising.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Anaglyph3D.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Anaglyph3D.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Anaglyph3D.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.ClearTextCaptions.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.ClearTextCaptions.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.ClearTextCaptions.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Heuristics.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Heuristics.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Heuristics.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Monitoring.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Monitoring.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Monitoring.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Progressive.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Progressive.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.Progressive.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.SmoothStreaming.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.SmoothStreaming.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.SmoothStreaming.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.TimedText.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.TimedText.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.TimedText.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Plugins.XML" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Utilities.dll" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Utilities.pdb" />
-    <Content Include="Junk\Microsoft.SilverlightMediaFramework.Utilities.XML" />
     <Content Include="SplashScreenImage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Junk\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

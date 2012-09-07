@@ -6,6 +6,9 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Core="clr-namespace:Microsoft.SilverlightMediaFramework.Core;assembly=Microsoft.SilverlightMediaFramework.Core.Phone"
+xmlns:Media="clr-namespace:Microsoft.SilverlightMediaFramework.Core.Media;assembly=Microsoft.SilverlightMediaFramework.Core.Phone"
+xmlns:ssme="clr-namespace:Microsoft.Web.Media.SmoothStreaming;assembly=Microsoft.Web.Media.SmoothStreaming"
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -28,10 +31,14 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <StackPanel>
+            <StackPanel Visibility="Collapsed">
                 <MediaElement x:Name="player" Height="300" Width="300"/>
                 <TextBox x:Name="urlInputBox" Width="400" Height="100" Text="http://www.robtowns.com/music/blind_willie.mp3"/>
                 <Button x:Name="PlayPauseButton" Content="Play" Height="100" Width="300" Click="PlayPauseButton_Click"  />
+            </StackPanel>
+            <StackPanel>
+                 <TextBlock Text="WP7 Smooth Streaming Demo" Height="22" Width="266" FontSize="12" Foreground="Blue"/>
+                 <Core:SMFPlayer Name="strmPlayer" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"/> 
             </StackPanel>
         </Grid>
     </Grid>

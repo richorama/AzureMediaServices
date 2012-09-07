@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
+using Microsoft.SilverlightMediaFramework.Core.Media;
 
 namespace StreamingClientWP7
 {
@@ -23,6 +24,13 @@ namespace StreamingClientWP7
             InitializeComponent();
 
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
+
+            PlaylistItem item = new PlaylistItem();
+            //item.MediaSource = new Uri("http://ecn.channel9.msdn.com/o9/content/smf/smoothcontent/bbbwp7/big buck bunny.ism/manifest");
+            item.MediaSource = new Uri("http://media10store.blob.core.windows.net/asset-89533529-dded-42d2-b684-c9025da42b50/dail.ism");
+            item.DeliveryMethod = Microsoft.SilverlightMediaFramework.Plugins.Primitives.DeliveryMethods.AdaptiveStreaming;
+            strmPlayer.Playlist.Add(item);
+            strmPlayer.Play(); 
         }
 
         void MainPage_Loaded(object sender, RoutedEventArgs e)
