@@ -16,7 +16,6 @@ namespace MediaServicesClient
     public partial class MainWindow : Window
     {
         ObservableCollection<String> encodingOptions = new ObservableCollection<String>();
-        OpenFileDialog fileDialog;
 
         MediaServicesConnector connector;
 
@@ -25,8 +24,7 @@ namespace MediaServicesClient
             InitializeComponent();
             connector = new MediaServicesConnector(); 
 
-            fileDialog = new OpenFileDialog();
-            fileDialog.FileOk += fileUpload;
+            
             connector.HandleContextAcquired += new ContextAcquired(connector_HandleContextAcquired);
             connector.HandleAssetUploaded += new AssetUploaded(connector_HandleAssetUploaded);
             connector.HandleAssetDeleted += new AssetDeleted(connector_HandleAssetDeleted);
@@ -145,7 +143,9 @@ namespace MediaServicesClient
 
         private void ShowDialogButton_Clicked(object sender, RoutedEventArgs e)
         {
-            fileDialog.ShowDialog();
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.FileOk += fileUpload;
+            fileDialog.ShowDialog();            
         }
 
         private void UploadAsset_Clicked(object sender, RoutedEventArgs e)
@@ -171,8 +171,8 @@ namespace MediaServicesClient
 
         private void fileUpload(System.Object sender, System.EventArgs e)
         {
-            String fileNames = fileDialog.FileName;
-            connector.UploadAsset(fileNames, AssetCreationOptions.StorageEncrypted);
+            String fileName = (sender as OpenFileDialog).FileName;
+            connector.UploadAsset(fileName, AssetCreationOptions.StorageEncrypted);
             UploadProgressPanel.Visibility = System.Windows.Visibility.Visible;
         }
 
