@@ -23,7 +23,6 @@ namespace MediaServicesClient
         {
             InitializeComponent();
             connector = new MediaServicesConnector(); 
-
             
             connector.HandleContextAcquired += new ContextAcquired(connector_HandleContextAcquired);
             connector.HandleAssetUploaded += new AssetUploaded(connector_HandleAssetUploaded);
@@ -119,19 +118,7 @@ namespace MediaServicesClient
             SaveFileDialog dialog = sender as SaveFileDialog;
 
             IAsset asset = (ChildBox.SelectedItems[0] as MediaAsset).GetIAsset();
-            if (asset.Files.Count > 0)
-            {
-                Thread thread = new Thread(() =>
-                    {
-                        asset.Files[0].DownloadToFile(dialog.FileName);
-                    }
-                );
-                thread.Start();
-            }
-            else
-            {
-                Console.WriteLine("Nothing to download");
-            }
+            connector.DownloadAsset(asset, dialog.FileName);
         }
 
         private void LoginButton_Clicked(object sender, RoutedEventArgs e)

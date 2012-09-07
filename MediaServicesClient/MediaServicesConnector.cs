@@ -146,6 +146,24 @@ namespace MediaServicesClient
             EncodeAsset(currentAsset, options);
         }
 
+        public void DownloadAsset(IAsset asset, string filePath)
+        {
+            Thread thread = new Thread(() =>
+                {
+                    if (asset.Files.Count > 0)
+                    {
+                        asset.Files[0].DownloadToFile(filePath);
+                    }
+                }
+            );
+            thread.Start();
+        }
+
+        public void DownloadAsset(string assetID, string filePath)
+        {            
+            DownloadAsset(GetAssetFromID(assetID), filePath);             
+        }
+
         public void UpdateAssetList()
         {
             if (context == null) throw new ArgumentNullException("context null - can't communicate");
