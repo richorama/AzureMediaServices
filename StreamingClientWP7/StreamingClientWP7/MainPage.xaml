@@ -25,8 +25,8 @@ xmlns:ssme="clr-namespace:Microsoft.Web.Media.SmoothStreaming;assembly=Microsoft
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="ApplicationTitle" Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="Video" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock x:Name="ApplicationTitle" Text="Test Stream Reader" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock x:Name="PageTitle" Text="WP7" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
@@ -37,7 +37,6 @@ xmlns:ssme="clr-namespace:Microsoft.Web.Media.SmoothStreaming;assembly=Microsoft
                 <Button x:Name="PlayPauseButton" Content="Play" Height="100" Width="300" Click="PlayPauseButton_Click"  />
             </StackPanel>
             <StackPanel>
-                 <TextBlock Text="WP7 Smooth Streaming Demo" Height="22" Width="266" FontSize="12" Foreground="Blue"/>
                  <Core:SMFPlayer Name="strmPlayer" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"/> 
             </StackPanel>
         </Grid>
