@@ -141,7 +141,6 @@ namespace MediaServicesClient
                 task.InputMediaAssets.Add(asset);
                 task.OutputMediaAssets.AddNew(asset.Name + " " + configOption, true, AssetCreationOptions.None);
             }
-
             job.Submit();
         }
 
@@ -173,6 +172,8 @@ namespace MediaServicesClient
             if (context == null) throw new ArgumentNullException("context null - can't communicate");
             MediaAssets.Clear();
             assetsList.Clear();
+            // Has to be looped through twice unfortunatly
+            // Could be replaced by a map based algorithm
             foreach (IAsset item in context.Assets.ToList())
             {
                 assetsList.Add(item);
