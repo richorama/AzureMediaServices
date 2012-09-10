@@ -8,6 +8,7 @@ using System.Configuration;
 using Microsoft.WindowsAzure.MediaServices.Client;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.StorageClient;
+using Converter;
 
 
 class Program
@@ -15,56 +16,24 @@ class Program
     private static CloudMediaContext mediaContext;
     private static string accKey  = "qrtMwX0RJWZFzK0kjOzZUn7y5Cm/zcpM6lX5dnCmUu0=";
     private static string accName = "media101tut";
-    private static string input = Path.GetFullPath(@"D:\input\bail.wmv");
+    private static string input = Path.GetFullPath(@"D:\input\dail.wmv");
+    private static string input2 = Path.GetFullPath(@"D:\input\beta.txt");
     private static string output = Path.GetFullPath(@"D:\output");
     // Path to configuration file if required, i.e. for streamer conversion
     private static string configFilePath = Path.GetFullPath(@"D:\input\MP4 to Smooth Streams.xml");
 
-    private static CloudBlobClient blobClient;
-    private static CloudBlobContainer blobContainer;
-    private static BlobContainerPermissions containerPermissions;
-    private static CloudStorageAccount csa = CloudStorageAccount.Parse("DefaultEndpointsProtocol=http;AccountName=media10store;AccountKey=NTWiBFsIvyPZaYs0WN7SNrjUKi24q4DHAmu9Z/h+TWAsQsa2+eZalcohusy0Wj01C10q0dKr2X29Avwfv8QwIA==");
-    
-
     static void Main(string[] args)
     {
+        // Upload and encode a file via media services
         mediaContext = new CloudMediaContext(accName, accKey);
         IAsset asset = mediaContext.Assets.Create(input);
         Console.WriteLine("Upload complete");
         Encode(asset, output);
-        viewBlob();
-    }
 
-    static void viewBlob()
-    {
-        try
-        {
-            blobContainer = blobClient.GetContainerReference("newContainer");
-            blobContainer.CreateIfNotExist();
-            containerPermissions = new BlobContainerPermissions();
-            containerPermissions.PublicAccess = BlobContainerPublicAccessType.Blob;
-            blobContainer.SetPermissions(containerPermissions);
-            CloudBlob blob = blobContainer.GetBlobReference("myfile.txt");
-            Console.WriteLine("Starting file upload");
-            blob.UploadFile(input);
-            Console.WriteLine("File upload complete to blob " + blob.Uri);
-
-            blobClient = csa.CreateCloudBlobClient();
-            foreach (var con in blobClient.ListContainers())
-            {
-                Console.WriteLine(con.Uri);
-            }
-        }
-        catch { Console.WriteLine("Error!"); }
-    }
-
-    static void deleteAll()
-    {
-        foreach (var con in blobClient.ListContainers())
-        {
-            con.Delete();
-        }
-        Console.WriteLine("All Containers/Blobs deleted");
+        // View the current blob containers
+        Converter.blob storAcc = new blob();
+        storAcc.viewBlob();
+        Console.ReadLine();
     }
 
     static void Encode(IAsset asset, string outputFolder)
@@ -76,7 +45,7 @@ class Program
         string configuration = File.ReadAllText(configFilePath);
 
         IMediaProcessor processor = theProcessor.First();
-        ITask task = job.Tasks.AddNew("WMV task", processor, "H.264 256k DSL CBR", TaskCreationOptions.ProtectedConfiguration);
+        ITask task = job.Tasks.AddNew("WMV task", processor, "H.264 HD 1080p VBR", TaskCreationOptions.ProtectedConfiguration);
         task.InputMediaAssets.Add(asset);
         task.OutputMediaAssets.AddNew("Output asset", true, AssetCreationOptions.None);
         job.Submit();
@@ -92,7 +61,7 @@ class Program
         bool jobCompleted = false;
         // Expected polling interval in milliseconds
         const int JobProgressInterval = 10000;
-
+        var i = 0;
         while (!jobCompleted)
         {
             // Update the current job status
@@ -105,7 +74,7 @@ class Program
                     jobCompleted = true;
                     Console.WriteLine("");
                     Console.WriteLine("#===============#");
-                    Console.WriteLine("Job state is: " + theJob.State + ".");
+                    Console.WriteLine(i+": Job state is: " + theJob.State + ".");
                     Console.WriteLine("Please wait while local tasks complete...");
                     DownloadAssetToLocal(theJob, output);
                     Console.WriteLine();
@@ -113,7 +82,7 @@ class Program
                 case JobState.Queued:
                 case JobState.Scheduled:
                 case JobState.Processing:
-                    Console.WriteLine("Job state is: " + theJob.State + ".");
+                    Console.WriteLine(i+": Job state is: " + theJob.State + ".");
                     Console.WriteLine("Please wait...");
                     Console.WriteLine();
                     break;
@@ -124,6 +93,7 @@ class Program
                     break;
             }
             // Wait for the specified job interval before checking state again.
+            i++;
             Thread.Sleep(JobProgressInterval);
         }
 
@@ -179,9 +149,7 @@ class Program
             where f.Name.EndsWith(".ism")
             select f;
 
-
         Console.WriteLine("--> "+theManifest.ToString());
-
 
         IFileInfo manifestFile = theManifest.FirstOrDefault();
 
@@ -211,10 +179,6 @@ class Program
 
         // Create a policy for the asset. 
         IAccessPolicy readPolicy = mediaContext.AccessPolicies.Create("My Test Policy", accessPolicyTimeout, AccessPermissions.Read);
-
-        // Create a locator for the asset. This assigns the policy to the asset and returns a locator.  
-        // Also specify the startTime parameter, setting it 5 minutes before "Now", so that the locator 
-        // is accessible right away even if there is clock skew between the server time and local time.  
         ILocator locator = mediaContext.Locators.CreateSasLocator(asset,
             readPolicy,
             DateTime.UtcNow.AddMinutes(-5));
@@ -224,10 +188,6 @@ class Program
         Console.WriteLine(locator.Path);
         Console.WriteLine();
 
-        // Get the asset file name, you use this to create the SAS URL. In this sample,  
-        // get an output file with an .mp4 ending. We know that .mp4 is the type of  
-        // output file the encoding job produces and we don't want a link to the  
-        // .xml metadata file on the server, in this case. 
         var theOutputFile =
                             from f in asset.Files
                             where f.Name.EndsWith(".mp4")
