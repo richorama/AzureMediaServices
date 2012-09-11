@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using Microsoft.WindowsAzure.MediaServices.Client;
 using System.Collections.ObjectModel;
 using System.Data.Services.Client;
 
+
+/**
+ * Large quantities of this code is based on the Microsoft Sample code
+ * */
 namespace MediaServicesClient
 {
     public delegate void ContextAcquired();
@@ -84,6 +87,7 @@ namespace MediaServicesClient
             );
             thread.Start();
         }
+
         public void DeleteAsset(string assetID)
         {
             var asset = GetAssetFromID(assetID);
@@ -137,7 +141,6 @@ namespace MediaServicesClient
                 task.InputMediaAssets.Add(asset);
                 task.OutputMediaAssets.AddNew(asset.Name + " " + configOption, true, AssetCreationOptions.None);
             }
-
             job.Submit();
         }
 
@@ -146,11 +149,31 @@ namespace MediaServicesClient
             EncodeAsset(currentAsset, options);
         }
 
+        public void DownloadAsset(IAsset asset, string filePath)
+        {
+            Thread thread = new Thread(() =>
+                {
+                    if (asset.Files.Count > 0)
+                    {
+                        asset.Files[0].DownloadToFile(filePath);
+                    }
+                }
+            );
+            thread.Start();
+        }
+
+        public void DownloadAsset(string assetID, string filePath)
+        {            
+            DownloadAsset(GetAssetFromID(assetID), filePath);             
+        }
+
         public void UpdateAssetList()
         {
             if (context == null) throw new ArgumentNullException("context null - can't communicate");
             MediaAssets.Clear();
             assetsList.Clear();
+            // Has to be looped through twice unfortunatly
+            // Could be replaced by a map based algorithm
             foreach (IAsset item in context.Assets.ToList())
             {
                 assetsList.Add(item);
@@ -176,9 +199,6 @@ namespace MediaServicesClient
                 {
                     foreach (IJob job in context.Jobs)
                     {
-                        Console.WriteLine(job.Name);
-                        Console.WriteLine("Deleting Job: " + job.Name);
-                        DeleteJob(job.Id);
                         jobs.Add(job);
                     }
                     if (HandleJobsReceived != null)
@@ -189,6 +209,7 @@ namespace MediaServicesClient
             );
             thread.Start();
         }
+
         public IJob GetJob(string jobId)
         {
             var job =

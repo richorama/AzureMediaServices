@@ -1,37 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.WindowsAzure.MediaServices.Client;
 using System.Collections.ObjectModel;
 
 namespace MediaServicesClient
 {
+    public class MediaAssetCollection
+    {
+        List<MediaAsset> assets = new List<MediaAsset>();
+
+        public MediaAssetCollection(List<IAsset> assetList)
+        {
+            ProcessAssets(assetList);
+        }
+        public MediaAssetCollection(BaseAssetCollection assetCollection)
+        {
+            List<IAsset> assetList = new List<IAsset>();
+            foreach (IAsset asset in assetCollection)
+            {
+                assetList.Add(asset);
+            }
+            ProcessAssets(assetList);
+        }
+
+        private void ProcessAssets(List<IAsset> assetList)
+        {
+            foreach (IAsset asset in assetList)
+            {
+                if (asset.ParentAssets.Count == 0)
+                {
+                    assets.Add(new MediaAsset(asset));
+                }
+            }
+            foreach (IAsset asset in assetList)
+            {
+                foreach (MediaAsset mediaAsset in assets)
+                {
+                    mediaAsset.AddChildIfChild(asset);
+                }
+            }
+        }
+    }
+
     public class MediaAsset
     {
-        IAsset root;
-        List<IAsset> children = new List<IAsset>();
+        private IAsset root;
+        private List<MediaAsset> children = new List<MediaAsset>();
 
         public String Name
         {
             get
-            {
-                return root.Name;
+            {               
+                if (root.Files.Count != 0)
+                {
+                    return root.Files[0].Name;
+                }
+                else
+                {
+                    return root.Name;
+                }                
             }
-        }
-        
-        public ObservableCollection<String> Children
+        }        
+
+        public ObservableCollection<MediaAsset> Children
         {
             get
             {
-                ObservableCollection<String> names = new ObservableCollection<String>();
-                foreach (IAsset asset in children)
+                ObservableCollection<MediaAsset> names = new ObservableCollection<MediaAsset>();
+                foreach (MediaAsset asset in children)
                 {
-                    if (asset.Files.Count > 0)
-                    {
-                        names.Add(asset.Files[0].Name);
-                    }
+                    names.Add(asset);                    
                 }
+                names.Add(new MediaAsset(root));
                 return names;
             }
         }
@@ -47,18 +87,14 @@ namespace MediaServicesClient
             {
                 if (newChild.ParentAssets[0].Id == root.Id)
                 {
-                    children.Add(newChild);
-                    Console.WriteLine("Child added");
-                }
-                else
-                {
-                    Console.WriteLine("Child not related to root");
+                    children.Add(new MediaAsset(newChild));
                 }
             }
-            else
-            {
-                Console.WriteLine("No Parent Assets");
-            }
+        }
+
+        public IAsset GetIAsset()
+        {
+            return this.root;
         }
     }
 }

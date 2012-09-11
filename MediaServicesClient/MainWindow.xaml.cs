@@ -1,22 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.WindowsAzure.MediaServices;
 using Microsoft.WindowsAzure.MediaServices.Client;
-using System.Diagnostics;
 using System.Collections.ObjectModel;
 using Microsoft.Win32;
-using System.IO;
 using System.Threading;
 
 namespace MediaServicesClient
@@ -27,7 +16,6 @@ namespace MediaServicesClient
     public partial class MainWindow : Window
     {
         ObservableCollection<String> encodingOptions = new ObservableCollection<String>();
-        OpenFileDialog fileDialog;
 
         MediaServicesConnector connector;
 
@@ -35,15 +23,14 @@ namespace MediaServicesClient
         {
             InitializeComponent();
             connector = new MediaServicesConnector(); 
-
-            fileDialog = new OpenFileDialog();
-            fileDialog.FileOk += fileUpload;
+            
+            // Subscribing to the events
             connector.HandleContextAcquired += new ContextAcquired(connector_HandleContextAcquired);
             connector.HandleAssetUploaded += new AssetUploaded(connector_HandleAssetUploaded);
             connector.HandleAssetDeleted += new AssetDeleted(connector_HandleAssetDeleted);
-            connector.HandleJobsReceived += new JobsReceived(connector_HandleJobsReceived);
             connector.OnUploadReceived += new UploadReceived(connector_OnUploadReceived);
 
+            // Set the item source to display onscreen
             AssetsListBox.ItemsSource = connector.MediaAssets;
             foreach (String option in connector.encodingOptions)
             {
@@ -51,40 +38,37 @@ namespace MediaServicesClient
             }
             EncodingOptions.ItemsSource = encodingOptions;
 
+            // Subscribe to event
             AssetsListBox.SelectionChanged += new SelectionChangedEventHandler(AssetsListBox_SelectionChanged);
         }
 
         void AssetsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var itemSource = (e.AddedItems[0] as MediaAsset).Children;
-            Console.WriteLine("Number of children: " + itemSource.Count);
-            ChildBox.ItemsSource = itemSource;
+            // If something was added
+            if (e.AddedItems.Count > 0)
+            {
+                var itemSource = (e.AddedItems[0] as MediaAsset).Children;
+                Console.WriteLine("Number of children: " + itemSource.Count);
+                // Show its children on the screen
+                ChildBox.ItemsSource = itemSource;
+            }
         }
 
         void connector_OnUploadReceived(UploadProgressEventArgs e)
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
                 {
+                    // Update the progress bar to reflect the download progress
                     UploadProgressBar.Value = e.Progress;
                 }
             ));
-        }
-
-        void connector_HandleJobsReceived(ObservableCollection<IJob> jobs)
-        {
-            this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    JobsBox.ItemsSource = jobs;
-                    Console.WriteLine("Jobs Length: " + jobs.Count);
-                    JobsBox.Visibility = System.Windows.Visibility.Visible;
-                }
-            ));            
         }
 
         void connector_HandleAssetDeleted()
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
                 {
+                    // Update the asset list
                     connector.UpdateAssetList();
                 }
             ));
@@ -94,6 +78,7 @@ namespace MediaServicesClient
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
                 {
+                    // Change the state of the UI
                     UploadProgressPanel.Visibility = System.Windows.Visibility.Collapsed;
                     EncodeButton.Visibility = System.Windows.Visibility.Visible;
 
@@ -119,52 +104,77 @@ namespace MediaServicesClient
                     MediaServicesPanel.Visibility = System.Windows.Visibility.Visible;
 
                     connector.UpdateAssetList();
-                    connector.GetJobs();
                 }
             ));
+        }
+
+        void dialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Make a dialog for saving the file
+            SaveFileDialog dialog = sender as SaveFileDialog;
+            // Extract the asset
+            IAsset asset = (ChildBox.SelectedItems[0] as MediaAsset).GetIAsset();
+            // Download it
+            connector.DownloadAsset(asset, dialog.FileName);
         }
 
         private void LoginButton_Clicked(object sender, RoutedEventArgs e)
         {
             LoginPanel.Visibility = System.Windows.Visibility.Collapsed;
             LoggingInPanel.Visibility = System.Windows.Visibility.Visible;
+            // Equivalent of logging in
             connector.AcquireContext(AccountNameBox.Text, AccountKeyBox.Text);          
         }
 
         private void ShowDialogButton_Clicked(object sender, RoutedEventArgs e)
         {
-            fileDialog.ShowDialog();
+            // Make a dialog for opening the file
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            // Register for event
+            fileDialog.FileOk += fileUpload;
+            // Show the dialog
+            fileDialog.ShowDialog();            
         }
 
         private void UploadAsset_Clicked(object sender, RoutedEventArgs e)
         {
+            // Extract the encoding options
             List<String> options = new List<String>();
             foreach (var selection in EncodingOptions.SelectedItems)
             {
                 options.Add(selection as String);
             }
+            // Encode the assets
             connector.EncodeAsset(options);
         }
 
         private void DeleteAsset_Clicked(object sender, RoutedEventArgs e)
         {
             List<IAsset> assets = new List<IAsset>();
-            foreach (IAsset asset in AssetsListBox.SelectedItems)
+            // Assign the source based on what has something selected
+            var selectedItems = (AssetsListBox.SelectedItems.Count == 0) ? ChildBox.SelectedItems : AssetsListBox.SelectedItems;
+            // Collect the assets into the list
+            foreach (MediaAsset asset in selectedItems)
             {
-                assets.Add(asset);
+                assets.Add(asset.GetIAsset());
             }
+            // Delete the assets in the list
             connector.DeleteAssets(assets);
         }
 
         private void fileUpload(System.Object sender, System.EventArgs e)
         {
-            String fileNames = fileDialog.FileName;
-            connector.UploadAsset(fileNames, AssetCreationOptions.StorageEncrypted);
+            // Extract the filename
+            String fileName = (sender as OpenFileDialog).FileName;
+            // Upload the asset to the cloud
+            connector.UploadAsset(fileName, AssetCreationOptions.StorageEncrypted);
+            // Slightly change the UI
             UploadProgressPanel.Visibility = System.Windows.Visibility.Visible;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            // Refresh the update asset list
             connector.UpdateAssetList();
         }
 
@@ -172,31 +182,13 @@ namespace MediaServicesClient
         {
             if (AssetsListBox.SelectedItems.Count > 0)
             {
+                // Form a dialog
                 SaveFileDialog dialog = new SaveFileDialog();
-                
+                // Register for the event
                 dialog.FileOk += new System.ComponentModel.CancelEventHandler(dialog_FileOk);
+                // Show the dialog
                 dialog.ShowDialog();                
             }
-        }
-
-        void dialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            SaveFileDialog dialog = sender as SaveFileDialog;
-
-            IAsset asset = AssetsListBox.SelectedItems[0] as IAsset;
-            if (asset.Files.Count > 0)
-            {
-                Thread thread = new Thread(() =>
-                    {
-                        asset.Files[0].DownloadToFile(dialog.FileName);
-                    }
-                );
-                thread.Start();
-            }
-            else
-            {
-                Console.WriteLine("Nothing to download");
-            }
-        }
+        }       
     }
 }

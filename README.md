@@ -1,7 +1,9 @@
-<<<<<<< HEAD
-
 AzureMediaServices
 ==================
 
-Simple connector for accessing the Azure Media Service
->>>>>>> 6bfa806e5aefbb4b0291c37f23871f76d53f4d18
+Simple connector for accessing the Azure Media Service.
+Well, it was ...
+
+Mostly its a throw together hodge podge of the stuff we've done on MediaServices recently
+
+I'm sure normal service will resume
