@@ -12,16 +12,16 @@ using Converter;
 
 namespace Converter
 {
-    class media
+    class Media
     {
         public CloudMediaContext mediaContext;
 
-        public media(string accName, string accKey)
+        public Media(string accName, string accKey)
         {
             mediaContext = new CloudMediaContext(accName, accKey);
         }
 
-        public void Encode(IAsset asset, string encode)
+        public void Encode(IAsset asset, params string[] encodings)
         {
             IJob job = mediaContext.Jobs.Create("Encoding task");
             var theProcessor = from p in mediaContext.MediaProcessors
@@ -31,9 +31,14 @@ namespace Converter
             //string configuration = File.ReadAllText(configFilePath);
 
             IMediaProcessor processor = theProcessor.First();
-            ITask task = job.Tasks.AddNew("WMV task", processor, encode, TaskCreationOptions.ProtectedConfiguration);
-            task.InputMediaAssets.Add(asset);
-            task.OutputMediaAssets.AddNew("Output asset", true, AssetCreationOptions.CommonEncryptionProtected);
+            var i = 0;
+            foreach (var encoding in encodings)
+            {
+                ITask task = job.Tasks.AddNew(i.ToString() + " task", processor, encoding, TaskCreationOptions.ProtectedConfiguration);
+                task.InputMediaAssets.Add(asset);
+                task.OutputMediaAssets.AddNew(i.ToString() + " output asset", true, AssetCreationOptions.CommonEncryptionProtected);
+                i++;
+            }
             job.Submit();
             
             CheckJobProgress(job.Id);

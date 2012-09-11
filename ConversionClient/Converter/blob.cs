@@ -11,7 +11,7 @@ using Microsoft.WindowsAzure.StorageClient;
 
 namespace Converter
 {
-    class blob
+    class Blob
     {
         private static CloudBlobContainer blobContainer;
         static string storage = "media10store";

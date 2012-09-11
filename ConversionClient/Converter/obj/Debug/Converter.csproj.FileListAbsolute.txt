@@ -7,3 +7,12 @@ c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\ob
 c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\obj\Debug\Converter.pdb
 c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\bin\Debug\Microsoft.WindowsAzure.StorageClient.xml
 c:\users\liam.daley\documents\visual studio 2012\Projects\Converter\Converter\obj\Debug\Converter.csprojResolveAssemblyReference.cache
+D:\git\AzureMediaServices\ConversionClient\Converter\obj\Debug\Converter.exe
+D:\git\AzureMediaServices\ConversionClient\Converter\obj\Debug\Converter.pdb
+D:\git\AzureMediaServices\ConversionClient\Converter\bin\Debug\Converter.exe
+D:\git\AzureMediaServices\ConversionClient\Converter\bin\Debug\Converter.pdb
+D:\git\AzureMediaServices\ConversionClient\Converter\bin\Debug\Microsoft.WindowsAzure.StorageClient.dll
+D:\git\AzureMediaServices\ConversionClient\Converter\bin\Debug\Microsoft.WindowsAzure.MediaServices.Client.xml
+D:\git\AzureMediaServices\ConversionClient\Converter\bin\Debug\Microsoft.WindowsAzure.StorageClient.xml
+D:\git\AzureMediaServices\ConversionClient\Converter\obj\Debug\Converter.csprojResolveAssemblyReference.cache
+D:\git\AzureMediaServices\ConversionClient\Converter\bin\Debug\encodings.txt
